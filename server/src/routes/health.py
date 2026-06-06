@@ -6,7 +6,21 @@ router = APIRouter(tags=["health"])
 
 
 @router.get("/health")
-async def health():
+async def health(request: Request):
+    # Run a lightweight retrieval warmup so the pipeline stays hot between pings.
+    # UptimeRobot hits this every 5 min — keeps DB pool, BM25, and Redis cache warm.
+    try:
+        from src.rag.retrieval import retrieve
+        from src.services.redis_client import get_redis_binary
+        await retrieve(
+            "background skills projects",
+            "voice",
+            request.app.state.pool,
+            request.app.state.bm25,
+            get_redis_binary(),
+        )
+    except Exception:
+        pass
     return {"status": "ok"}
 
 
