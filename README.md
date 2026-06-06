@@ -160,6 +160,39 @@ cd server && PYTHONPATH=. python evaluation/eval_voice.py
 
 ---
 
+## Cost breakdown
+
+All infrastructure runs on free tiers for this deployment.
+
+**Infrastructure (monthly):**
+
+| Service | Plan | Cost |
+|---|---|---|
+| Render (backend) | Free | $0 |
+| Vercel (frontend) | Free | $0 |
+| Supabase (pgvector + Postgres) | Free (up to 500MB) | $0 |
+| Upstash Redis | Free (up to 10K commands/day) | $0 |
+
+**Per voice call (variable, billed by Vapi):**
+
+| Component | Rate | 5-min call estimate |
+|---|---|---|
+| Vapi platform | ~$0.05/min | $0.25 |
+| Deepgram nova-2 STT | ~$0.006/min | $0.03 |
+| gpt-4o (10 turns, ~200 tokens/turn) | $2.50/1M input, $10/1M output | ~$0.01 |
+| ElevenLabs George TTS | ~$0.30/1M characters | ~$0.01 |
+| **Total per call** | | **~$0.30-0.40** |
+
+**Per chat session (variable, billed by OpenAI):**
+
+| Component | Rate | 10-message session estimate |
+|---|---|---|
+| text-embedding-3-small | $0.02/1M tokens | <$0.001 |
+| gpt-4o (10 turns, ~1000 input + 200 output tokens/turn) | $2.50/1M input, $10/1M output | ~$0.045 |
+| **Total per session** | | **~$0.05** |
+
+---
+
 ## Key implementation notes
 
 **Vapi tool arguments:** Vapi sends `arguments` as a dict, not a JSON string. Always handle both: `json.loads(x) if isinstance(x, str) else x`.
