@@ -1,14 +1,12 @@
 from __future__ import annotations
+import asyncio
 import time
 from fastapi import APIRouter, Request
 
 router = APIRouter(tags=["health"])
 
 
-@router.get("/health")
-async def health(request: Request):
-    # Run a lightweight retrieval warmup so the pipeline stays hot between pings.
-    # UptimeRobot hits this every 5 min — keeps DB pool, BM25, and Redis cache warm.
+async def _background_warmup(request: Request) -> None:
     try:
         from src.rag.retrieval import retrieve
         from src.services.redis_client import get_redis_binary
@@ -21,6 +19,11 @@ async def health(request: Request):
         )
     except Exception:
         pass
+
+
+@router.get("/health")
+async def health(request: Request):
+    asyncio.create_task(_background_warmup(request))
     return {"status": "ok"}
 
 
