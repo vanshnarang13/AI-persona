@@ -21,7 +21,6 @@ tiktoken==0.8.0
 
 # BM25 / retrieval
 rank-bm25==0.2.2
-sentence-transformers==3.1.1
 
 # Redis cache
 redis[asyncio]==5.0.8

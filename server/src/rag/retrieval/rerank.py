@@ -5,22 +5,23 @@ from src.models.retrieval import RetrievedChunk
 
 _MODEL_NAME = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
+try:
+    from sentence_transformers import CrossEncoder as _CrossEncoder
+    _RERANK_AVAILABLE = True
+except ImportError:
+    _RERANK_AVAILABLE = False
+
 
 @lru_cache(maxsize=1)
 def _get_model():
-    from sentence_transformers import CrossEncoder
-    return CrossEncoder(_MODEL_NAME)
+    return _CrossEncoder(_MODEL_NAME)
 
 
 async def rerank(
     query: str,
     chunks: list[RetrievedChunk],
 ) -> list[RetrievedChunk]:
-    """
-    Re-score chunks with a cross-encoder. Run in thread pool to avoid blocking the event loop.
-    Only called on chat path when len(chunks) > top_k.
-    """
-    if not chunks:
+    if not chunks or not _RERANK_AVAILABLE:
         return chunks
 
     model = await asyncio.get_event_loop().run_in_executor(None, _get_model)
@@ -35,7 +36,4 @@ async def rerank(
         key=lambda x: x[1],
         reverse=True,
     )
-
-    # Preserve original RRF/cosine scores — cross-encoder logits aren't calibrated
-    # for threshold-based grounding checks. Reranking only changes the ORDER.
     return [c for c, _ in reranked]
