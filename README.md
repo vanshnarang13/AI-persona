@@ -179,9 +179,9 @@ All infrastructure runs on free tiers for this deployment.
 |---|---|---|
 | Vapi platform | ~$0.05/min | $0.25 |
 | Deepgram nova-2 STT | ~$0.006/min | $0.03 |
-| gpt-4o (10 turns, ~200 tokens/turn) | $2.50/1M input, $10/1M output | ~$0.01 |
+| gpt-4o-mini (10 turns, ~200 tokens/turn) | $0.15/1M input, $0.60/1M output | ~$0.001 |
 | ElevenLabs George TTS | ~$0.30/1M characters | ~$0.01 |
-| **Total per call** | | **~$0.30-0.40** |
+| **Total per call** | | **~$0.29** |
 
 **Per chat session (variable, billed by OpenAI):**
 
