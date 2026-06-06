@@ -15,8 +15,8 @@ supabase==2.7.4
 pgvector==0.3.5
 
 # Embeddings / LLM
-openai==1.50.2
-anthropic==0.34.2
+openai>=1.50.2
+anthropic>=0.34.2
 tiktoken==0.8.0
 
 # BM25 / retrieval

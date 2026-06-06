@@ -4,7 +4,7 @@ services:
     runtime: docker
     dockerfilePath: ./server/Dockerfile
     dockerContext: ./server
-    plan: starter          # always-on (no sleep)
+    plan: free
     envVars:
       - key: OPENAI_API_KEY
         sync: false
