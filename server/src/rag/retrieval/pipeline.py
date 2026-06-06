@@ -12,7 +12,6 @@ from src.config.tuning import retrieval as cfg
 from .vector import embed_query, vector_search
 from .lexical_bm25 import BM25Index
 from .hybrid_rrf import rrf_fuse
-from .rerank import rerank
 
 log = structlog.get_logger(__name__)
 
@@ -22,9 +21,8 @@ _CACHE_TTL = 3600  # 1 hour
 def _cache_key(query: str, mode: str) -> str:
     config_sig = (
         f"topc={cfg.TOP_K_CHAT}:topv={cfg.TOP_K_VOICE}:"
-        f"mult={cfg.CANDIDATE_MULTIPLIER}:rrfk={cfg.RRF_K}:"
-        f"vw={cfg.VECTOR_WEIGHT}:bw={cfg.BM25_WEIGHT}:"
-        f"ef={cfg.HNSW_EF_SEARCH}"
+        f"rrfk={cfg.RRF_K}:vw={cfg.VECTOR_WEIGHT}:"
+        f"bw={cfg.BM25_WEIGHT}:ef={cfg.HNSW_EF_SEARCH}"
     )
     return "retrieve:" + hashlib.sha256(f"{query}:{mode}:{config_sig}".encode()).hexdigest()[:16]
 
@@ -43,7 +41,6 @@ async def retrieve(
     """
     latency: dict[str, float] = {}
     top_k = cfg.TOP_K_VOICE if mode == "voice" else cfg.TOP_K_CHAT
-    candidate_k = top_k * cfg.CANDIDATE_MULTIPLIER
 
     # ── Cache check (binary Redis — pickle is not UTF-8) ────────────
     cache_key = _cache_key(query, mode)
@@ -63,9 +60,9 @@ async def retrieve(
     # ── Vector + BM25 in parallel ────────────────────────────────────
     t2 = time.perf_counter()
     vector_task = asyncio.create_task(
-        vector_search(query_embedding, candidate_k, cfg.HNSW_EF_SEARCH, pool)
+        vector_search(query_embedding, top_k, cfg.HNSW_EF_SEARCH, pool)
     )
-    bm25_results = bm25_index.search(query, candidate_k)
+    bm25_results = bm25_index.search(query, top_k)
     vector_results = await vector_task
     latency["vector_ms"] = round((time.perf_counter() - t2) * 1000, 1)
     latency["bm25_ms"] = 0.0  # BM25 is sync, measured within vector window
@@ -78,15 +75,7 @@ async def retrieve(
     fused = rrf_fuse(vector_results, bm25_results)
     latency["rrf_ms"] = round((time.perf_counter() - t3) * 1000, 1)
 
-    # ── Rerank (chat only) ───────────────────────────────────────────
-    t4 = time.perf_counter()
-    if mode != "voice" and len(fused) > top_k:
-        candidates = fused[:candidate_k]
-        reranked = await rerank(query, candidates)
-        final = reranked[:top_k]
-    else:
-        final = fused[:top_k]
-    latency["rerank_ms"] = round((time.perf_counter() - t4) * 1000, 1)
+    final = fused[:top_k]
 
     # ── Cache result ─────────────────────────────────────────────────
     await redis.setex(cache_key, _CACHE_TTL, pickle.dumps(final))

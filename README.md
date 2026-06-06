@@ -28,8 +28,7 @@ Web chat  ─────┘     ├── /chat          SSE streaming
                      Retrieval pipeline
                      ├── Vector search   pgvector HNSW + text-embedding-3-small
                      ├── BM25            rank_bm25, Redis-cached (TTL 2h)
-                     ├── RRF fusion      weights 0.55/0.45, K=60
-                     └── Rerank          cross-encoder (chat only, skipped on voice)
+                     └── RRF fusion      weights 0.55/0.45, K=60
 
                      Agents
                      ├── PersonaAgent   create_react_agent, gpt-4o
@@ -58,7 +57,6 @@ Both paths hit the same retrieval pipeline, so answers are consistent across cha
 | Embeddings | text-embedding-3-small (1536d) |
 | Vector DB | Supabase pgvector, HNSW (m=16, ef=64) |
 | Lexical search | rank_bm25, Redis-cached |
-| Reranker | cross-encoder/ms-marco-MiniLM-L-6-v2 |
 | Cache | Upstash Redis (binary client) |
 | Booking state | LangGraph AsyncPostgresSaver on Supabase Postgres |
 | Voice | Vapi · Deepgram nova-2 · ElevenLabs George |
@@ -78,7 +76,7 @@ persona-agent/
 │   │   ├── routes/                   # chat, retrieve, booking, health, vapi_tools
 │   │   ├── rag/
 │   │   │   ├── ingestion/            # partition → chunk → embed → vectorize
-│   │   │   └── retrieval/            # vector, lexical_bm25, hybrid_rrf, rerank, pipeline
+│   │   │   └── retrieval/            # vector, lexical_bm25, hybrid_rrf, pipeline
 │   │   ├── agents/
 │   │   │   ├── persona_agent/        # grounded Q&A with guardrails
 │   │   │   └── booking_agent/        # LangGraph StateGraph + InjectedState tools
@@ -132,7 +130,7 @@ Tuned via grid search on a 67-question golden set. Locked in `server/src/config/
 | Parameter | Value |
 |---|---|
 | TOP_K chat / voice | 8 / 3 |
-| Vector / BM25 weights | 0.55 / 0.45 |
+| Vector / BM25 RRF weights | 0.55 / 0.45 |
 | HNSW ef_search | 100 |
 | Confidence threshold | 0.35 |
 

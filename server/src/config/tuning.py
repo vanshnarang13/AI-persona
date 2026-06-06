@@ -2,8 +2,7 @@
 class RetrievalConfig:
     # Tuned via scripts/tune_retrieval.py against evaluation/golden_set/questions.json
     TOP_K_CHAT: int = 8
-    TOP_K_VOICE: int = 3        # leaner for < 2s voice latency
-    CANDIDATE_MULTIPLIER: int = 2
+    TOP_K_VOICE: int = 3
 
     # RRF fusion weights (must sum to 1.0)
     RRF_K: int = 60
