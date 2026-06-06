@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: persona-api
+    runtime: docker
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    plan: starter          # always-on (no sleep)
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: CALCOM_API_KEY
+        sync: false
+      - key: CALCOM_EVENT_TYPE_ID
+        sync: false
+      - key: CALCOM_USERNAME
+        sync: false
+      - key: VAPI_API_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production

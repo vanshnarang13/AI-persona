@@ -1,0 +1,32 @@
+{
+  "name": "persona-chat",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start",
+    "postinstall": "echo 'deps ready'"
+  },
+  "dependencies": {
+    "@daily-co/daily-js": "^0.90.0",
+    "@vapi-ai/web": "^2.5.2",
+    "next": "15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "overrides": {
+    "@vapi-ai/web": {
+      "@daily-co/daily-js": "0.90.0"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5"
+  }
+}

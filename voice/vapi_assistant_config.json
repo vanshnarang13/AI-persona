@@ -1,0 +1,102 @@
+{
+  "name": "Vansh Narang - AI Persona",
+  "firstMessage": "Hi! I'm Vansh's AI assistant. Feel free to ask me about his background, projects, or experience — or I can help you schedule a call with him.",
+  "transcriber": {
+    "provider": "deepgram",
+    "model": "nova-2",
+    "language": "en-US"
+  },
+  "voice": {
+    "provider": "11labs",
+    "voiceId": "onwK4e9ZLuTAKqWW03F9",
+    "stability": 0.5,
+    "similarityBoost": 0.75,
+    "style": 0.0,
+    "useSpeakerBoost": true
+  },
+  "model": {
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "systemPrompt": "You are an AI assistant representing Vansh Narang. You MUST call the retrieve_context tool before answering any question about Vansh's background, skills, projects, or experience. Never answer from your own knowledge — always retrieve first. Keep responses concise (2-3 sentences max) since this is a voice call. If asked to schedule a meeting, use the check_availability and create_booking tools.",
+    "temperature": 0.3,
+    "maxTokens": 200,
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "retrieve_context",
+          "description": "Retrieve grounded context about Vansh Narang from his knowledge base. Call this for ANY question about his background, skills, projects, experience, education, or anything about him.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "The question or topic to search for"
+              }
+            },
+            "required": ["query"]
+          }
+        },
+        "server": {
+          "url": "https://trickery-blunt-chatter.ngrok-free.dev/vapi/tools"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "check_availability",
+          "description": "Check available time slots to schedule a call or interview with Vansh.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "days_ahead": {
+                "type": "integer",
+                "description": "How many days ahead to check availability",
+                "default": 7
+              }
+            }
+          }
+        },
+        "server": {
+          "url": "https://trickery-blunt-chatter.ngrok-free.dev/vapi/tools"
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "create_booking",
+          "description": "Book a 30-minute call with Vansh Narang. Use only after confirming the recruiter's name, email, and chosen time slot.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "description": "Recruiter's full name" },
+              "email": { "type": "string", "description": "Recruiter's email address" },
+              "start": { "type": "string", "description": "Start time in ISO 8601 format (UTC)" },
+              "notes": { "type": "string", "description": "Any notes or context for the meeting" }
+            },
+            "required": ["name", "email", "start"]
+          }
+        },
+        "server": {
+          "url": "https://trickery-blunt-chatter.ngrok-free.dev/vapi/tools"
+        }
+      }
+    ]
+  },
+  "silenceTimeoutSeconds": 20,
+  "maxDurationSeconds": 600,
+  "backgroundSound": "off",
+  "backchannelingEnabled": false,
+  "analysisPlan": {
+    "summaryPrompt": "Summarize this recruiter call: what questions were asked, what was discussed, and whether a booking was made.",
+    "structuredDataSchema": {
+      "type": "object",
+      "properties": {
+        "recruiter_name": { "type": "string" },
+        "company": { "type": "string" },
+        "booking_made": { "type": "boolean" },
+        "topics_discussed": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

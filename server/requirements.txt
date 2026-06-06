@@ -1,0 +1,45 @@
+# API
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9
+sse-starlette==2.1.3
+httpx==0.27.2
+
+# Data validation
+pydantic==2.9.2
+pydantic-settings==2.5.2
+
+# Vector DB / Postgres
+asyncpg==0.29.0
+supabase==2.7.4
+pgvector==0.3.5
+
+# Embeddings / LLM
+openai==1.50.2
+anthropic==0.34.2
+tiktoken==0.8.0
+
+# BM25 / retrieval
+rank-bm25==0.2.2
+sentence-transformers==3.1.1
+
+# Redis cache
+redis[asyncio]==5.0.8
+
+# Cal.com / booking
+python-dateutil==2.9.0.post0
+
+# Evals
+ragas==0.2.0
+
+# LangGraph / agents
+langgraph>=0.2.0
+langchain-openai>=0.2.0
+langgraph-checkpoint-postgres>=2.0.0
+psycopg[binary]>=3.2.0
+psycopg-pool>=3.2.0
+
+# Utilities
+python-dotenv==1.0.1
+structlog==24.4.0
+tenacity==9.0.0
