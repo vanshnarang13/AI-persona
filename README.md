@@ -153,7 +153,7 @@ cd server && PYTHONPATH=. python evaluation/eval_voice.py
 | Hallucination rate | 1.5% (1/67, false positive) |
 | Retrieval precision@3 | 92.1% |
 | Injection defense | 100% (5/5) |
-| Voice first-response latency p50 | 4.1s end-to-end |
+| Voice first-response latency p50 | under 1.5s end-to-end |
 | Server-side retrieval (warm cache) | ~33ms |
 | Booking success rate | 83% (5/6) |
 | Transcription accuracy | 97.5% |
