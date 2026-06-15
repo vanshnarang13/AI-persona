@@ -204,3 +204,5 @@ All infrastructure runs on free tiers for this deployment.
 **Redis client:** Must be binary (`decode_responses=False`). BM25 index and retrieval cache use pickle serialization.
 
 **Booking state:** Uses LangGraph `InjectedState` — the LLM never touches raw ISO datetimes. Users pick slots by number; the graph resolves the slot ID from state.
+
+---
