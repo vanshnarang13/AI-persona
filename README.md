@@ -1,8 +1,6 @@
 # AI Persona — Vansh Narang
 
-An autonomous AI persona that recruiters can **call** (voice) or **chat with** (web), ask about background, projects, and GitHub repos, and **book a real interview** — no human in the loop.
-
-Built as a screening assignment for the Scaler AI Engineer Intern role.
+An autonomous AI persona that recruiters can **call** (voice) or **chat with** (web), ask about background, projects, and GitHub repos, and **book a real interview** with no human in the loop.
 
 ---
 
