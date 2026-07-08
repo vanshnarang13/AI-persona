@@ -118,6 +118,7 @@ AtlasRAG/
 
 ---
 
+## API Reference
 
 ### Projects
 | Method | Endpoint | Description |
@@ -152,15 +153,11 @@ AtlasRAG/
 
 ## Data Model
 
-```
-users           — clerk_id, timestamps
-projects        — name, description, clerk_id
-project_settings — rag_strategy, agent_type, thresholds, weights (per project)
-project_documents — source_type, s3_key, processing_status, progress details
-document_chunks  — content, embedding (vector), original_content, page_number, type
-chats           — title, project_id, clerk_id
-messages        — content, role, citations[], chat_id
-```
+<p align="center">
+  <img src="docs/assets/database-erd.png" alt="AtlasRAG Database Schema ERD" width="100%">
+</p>
+
+<p align="center"><a href="https://app.eraser.io/workspace/3vKmgdruXhRmS9WxlsGN?diagram=-WOIPKRvViyjgT74km3o&layout=canvas">View/edit this ERD on Eraser</a></p>
 
 ## Setup
 

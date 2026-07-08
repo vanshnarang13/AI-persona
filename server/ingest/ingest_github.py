@@ -47,6 +47,7 @@ REPOS = [
     {"repo": "Drone-Audio-Classification",        "label": "Drone Audio Classification"},
     {"repo": "Multimodal-Property-Price-Prediction", "label": "Multimodal Property Price Prediction"},
     {"repo": "Stock-Sentiment-Analysis",          "label": "Stock Sentiment Analysis"},
+    {"repo": "sar-to-eo",                         "label": "SAR to EO Image Translation"},
 ]
 
 OUTPUT_DIR = Path(__file__).parent.parent / "data" / "corpus" / "github"

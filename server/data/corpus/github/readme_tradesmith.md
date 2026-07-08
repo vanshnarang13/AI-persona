@@ -20,7 +20,7 @@ Each agent runs its own investment strategy, manages a simulated $10,000 portfol
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/vanshnarang/TradeSmith.git
+git clone https://github.com/vanshnarang13/TradeSmith.git
 cd TradeSmith
 ```
 
